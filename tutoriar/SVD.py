@@ -1,4 +1,7 @@
+from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
+from scipy.linalg import svd
 
 def KLTransform(l, dimen):
     classNum = len(l)
@@ -48,10 +51,32 @@ def KLTransform(l, dimen):
         res.append(a.tolist())
     return res
 
-# a = [[-5,-5],[-5,-4],[-4,-5],[-5,-6],[-6,-5]]
-# b = [[5,5],[5,6],[6,5],[5,4],[4,5]]
-a = [[0,0,0],[2,0,0],[2,0,1],[1,2,0]]
-b = [[0,0,1],[0,1,0],[0,-2,1],[1,1,-2]]
-res = KLTransform([a, b], 1)
-for i in res:
-    print(i)
+def testKL():
+    # a = [[-5,-5],[-5,-4],[-4,-5],[-5,-6],[-6,-5]]
+    # b = [[5,5],[5,6],[6,5],[5,4],[4,5]]
+    a = [[0,0,0],[2,0,0],[2,0,1],[1,2,0]]
+    b = [[0,0,1],[0,1,0],[0,-2,1],[1,1,-2]]
+    res = KLTransform([a, b], 1)
+    for i in res:
+        print(i)
+
+def ImageCompress():
+    im = Image.open("D:\DateSet\lena.jpg").convert("L")
+    # print(im.format, im.size, im.mode)
+    indata = np.matrix(im)
+    # plt.imshow(indata, cmap="gray")
+    plt.show()
+    U, s, Vh = svd(indata)
+    for k in [1,5,20,50,100]:
+        S = np.diag(s[:k])
+        print(type(S),type(U[:,:k]))
+        newim =np.dot(np.dot(U[:,:k],S),Vh[:k,:])
+        plt.imshow(newim,cmap="gray")
+        plt.title("k = "+str(k))
+        plt.show()
+
+def CollaborativeFiltering(data):
+    U, s, Vh = svd(indata)
+
+if __name__ == '__main__':
+    ImageCompress()

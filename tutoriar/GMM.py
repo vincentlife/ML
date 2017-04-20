@@ -3,6 +3,55 @@ import matplotlib.pyplot as plt
 from sklearn.mixture import *
 from mpl_toolkits.mplot3d import Axes3D
 from math import e as E
+
+def gmm():
+    # distribution 1
+    x1size = 1000
+    x2size = 1000
+    x1 = np.random.normal(loc = 3.0,scale=1.5,size=x1size)
+    x2 = np.random.normal(loc = 6.0,scale=2.5,size=x2size)
+    y1 = np.zeros(x1size)
+    y2 = np.ones(x2size)
+    X = np.hstack((x1,x2))
+    y = np.hstack((y1,y2))
+    # initial models
+    loc1 = 1.0
+    scale1 = 2.0
+    loc2 = 10.0
+    scale2 = 2.0
+    while True:
+        # E step
+        tx1 = []
+        tx2 = []
+        from scipy.stats import norm
+        d1 = norm(loc1,scale1)
+        d2 = norm(loc2,scale2)
+        for x in list(X):
+            if d1.pdf(x) > d2.pdf(x):
+                tx1.append(x)
+            else:
+                tx2.append(x)
+        # M step
+        tx1 = np.array(tx1)
+        tx2 = np.array(tx2)
+        if np.abs(np.mean(tx2) - loc2) <= 0.0001 and np.abs(np.mean(tx1) - loc1) <= 0.0001:
+            break
+        loc1 = np.mean(tx1)
+        loc2 = np.mean(tx2)
+        scale1 = np.var(tx1)
+        scale2 = np.var(tx2)
+        print("------")
+        print(loc1,scale1)
+        print(loc2,scale2)
+    print("------")
+    print(loc1, scale1)
+    print(loc2, scale2)
+    g = GaussianMixture(n_components=2)
+    g.fit(X.reshape((X.shape[0],1)),y)
+    print(g.means_ )
+    print(g.covariances_)
+
+
 def test1():
     # distribution 1
     mean1 = (1,2)
@@ -31,7 +80,6 @@ def test1():
 
     gmm = GaussianMixture()
     gmm.fit(x,y)
-    print(gmm.get_params())
     # plt.scatter(x1,y1,s=20,c='red')
     # plt.scatter(x2,y2,s=20,c='blue')
     # plt.show()
@@ -54,4 +102,5 @@ def test2():
 
 
 if __name__ == '__main__':
-    test2()
+    gmm()
+    # generatedata()

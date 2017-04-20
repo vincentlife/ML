@@ -21,8 +21,6 @@ def visualizeDecesionTree():
     graph1 = pydot.graph_from_dot_data(dot_data.getvalue())[0]
     graph1.write_pdf("iris.pdf")
 
-def testPipeLine():
-    from sklearn import pipeline
 
 def irisVisualization():
     sns.set(style="white", color_codes=True)
@@ -45,7 +43,7 @@ def irisVisualization():
     sns.boxplot(x="Species", y="sepal length (cm)", data=iris)
     sns.violinplot(x="Species", y="sepal length (cm)", data=iris, size=6)
     sns.pairplot(iris, hue="Species", size=3)
-    # sns.plt.show()
+    sns.plt.show()
 
 
 
@@ -65,9 +63,15 @@ def testPreProc():
     from sklearn.preprocessing import Binarizer
     Binarizer(threshold=3).fit_transform(iris.data)
 
-    # 哑编码，对IRIS数据集的目标值，返回值为哑编码后的数据
+    # 哑编码，对IRIS数据集的目标值，返回值为哑编码后的数据，注意是2D的
+    # OneHotEncoder(sparse = False).fit_transform( testdata[['age']] )
     from sklearn.preprocessing import OneHotEncoder
     OneHotEncoder().fit_transform(iris.target.reshape((-1, 1)))
+
+    # 对于字符串型离散变量可以先用LabelEncoder 转换为数值再用OneHotEncoder编码
+    # 注意LabelEncoder是1D而OneHotEncoder是2D的
+    from sklearn.preprocessing import LabelEncoder
+    LabelEncoder().fit_transform(iris.data[""])
 
     # 缺失值计算，返回值为计算缺失值后的数据
     # 参数missing_value为缺失值的表示形式，默认为NaN
