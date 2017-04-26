@@ -75,8 +75,6 @@ def ImageCompress():
         plt.title("k = "+str(k))
         plt.show()
 
-def CollaborativeFiltering(data):
-    U, s, Vh = svd(indata)
 
 if __name__ == '__main__':
     ImageCompress()
